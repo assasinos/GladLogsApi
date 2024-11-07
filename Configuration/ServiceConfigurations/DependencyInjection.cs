@@ -1,5 +1,6 @@
 ﻿using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
+using GladLogsApi.Data.Repositories.CrudRepository;
 
 namespace GladLogsApi.Configuration.ServiceConfigurations
 {
@@ -12,9 +13,12 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
             builder.Services.Configure<DbConfig>(builder.Configuration.GetSection("DbConfig"));
             builder.Services.AddDbContext<ApplicationDbContext>();
 
+            //Add Automapper to make the CRUDRepository easier to maintain and use
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 
-            //Project seems to small to use a auto mapper but if it grows it would be a good idea to add it here
+            //Add the CRUDRepository
+            builder.Services.AddScoped(typeof(ICrudRepository<,,,>),typeof(CrudRepository<,,,>));
         }
     }
 }
