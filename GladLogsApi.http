@@ -1,0 +1,6 @@
+@GladLogsApi_HostAddress = http://localhost:5293
+
+GET {{GladLogsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
