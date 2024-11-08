@@ -8,17 +8,17 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
     {
         public MappingProfiles()
         {
-            CreateMap<Chat, ChatDto>();
-            CreateMap<Chat, CreateChatDto>();
+            CreateMap<Chat, ChatDto>().ReverseMap();
+            CreateMap<Chat, CreateChatDto>().ReverseMap();
 
-            CreateMap<User, UserDto>();
-            CreateMap<User, CreateUserDto>();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<User, CreateUserDto>().ReverseMap();
 
-            CreateMap<Week, WeekDto>();
-            CreateMap<Week, CreateWeekDto>();
+            CreateMap<Week, WeekDto>().ReverseMap();
+            CreateMap<Week, CreateWeekDto>().ReverseMap();
 
-            CreateMap<Message, MessageDto>();
-            CreateMap<Message, CreateMessageDto>();
+            CreateMap<Message, MessageDto>().ReverseMap();
+            CreateMap<Message, CreateMessageDto>().ReverseMap();
         }
     }
 }

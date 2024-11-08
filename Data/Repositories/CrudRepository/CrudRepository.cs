@@ -1,5 +1,6 @@
 ﻿
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using GladLogsApi.Models.Shared;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,9 +31,16 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
         {
             try
             {
-                var entity = _context.Set<TEntityBase>();
+                var entityContext = _context.Set<TEntityBase>();
+                var createEntity = _mapper.Map<TEntityBase>(createDto);
+                var entity =  entityContext.Add(createEntity);
                 _context.SaveChanges();
-                return _mapper.Map<TEntityDto>(entity);
+                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+                if (entityDto is null) {
+                    throw new Exception("Error creating entity.");
+                }
+
+                return entityDto;
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -50,6 +58,34 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
                 throw;
             }
 
+        }
+
+        public async Task<TEntityDto> CreateAsync(TCreateDto createDto)
+        {
+            try
+            {
+                var entityContext = _context.Set<TEntityBase>();
+                var createEntity = _mapper.Map<TEntityBase>(createDto);
+                var entity = entityContext.Add(createEntity);
+                _context.SaveChanges();
+                var entityDto = await entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entity).FirstOrDefaultAsync();
+                return entityDto is null ? throw new Exception("Error creating entity.") : entityDto;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Concurrency error occurred.");
+                throw;
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error updating the database.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+                throw;
+            }
         }
 
         public void Delete(TPrimaryKey id)
@@ -86,12 +122,62 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             }
         }
 
+        public async Task DeleteAsync(TPrimaryKey id)
+        {
+            try
+            {
+                var entity = await _context.Set<TEntityBase>().FindAsync(id);
+                if (entity == null)
+                {
+                    throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
+                }
+                _context.Set<TEntityBase>().Remove(entity);
+                await _context.SaveChangesAsync();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, ex.Message);
+                throw;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Concurrency error occurred.");
+                throw;
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error updating the database.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+                throw;
+            }
+        }
+
         public IEnumerable<TEntityDto> GetAll()
         {
             try
             {
-                var entities = _context.Set<TEntityBase>().ToList();
-                return _mapper.Map<IEnumerable<TEntityDto>>(entities);
+                var entityContext = _context.Set<TEntityBase>();
+                var entities = entityContext.ToList();
+                return entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entities);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<TEntityDto>> GetAllAsync()
+        {
+            try
+            {
+                var entityContext = _context.Set<TEntityBase>();
+                var entities = await entityContext.ToListAsync();
+                return entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entities);
             }
             catch (Exception ex)
             {
@@ -104,12 +190,39 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
         {
             try
             {
-                var entity = _context.Set<TEntityBase>().Find(id);
-                if (entity == null)
+                var entityContext = _context.Set<TEntityBase>();
+
+                var entity = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider,entityContext.Find(id)).FirstOrDefault();
+                if (entity is null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                return _mapper.Map<TEntityDto>(entity);
+                return entity;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, ex.Message);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+                throw;
+            }
+        }
+
+        public async Task<TEntityDto> GetByIdAsync(TPrimaryKey id)
+        {
+            try
+            {
+                var entityContext = _context.Set<TEntityBase>();
+
+                var entity = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, await entityContext.FindAsync(id)).FirstOrDefault();
+                if (entity is null)
+                {
+                    throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
+                }
+                return entity;
             }
             catch (KeyNotFoundException ex)
             {
@@ -137,18 +250,88 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             }
         }
 
+
         public TEntityDto Update(TPrimaryKey id, TCreateDto updateDto)
         {
             try
             {
-                var entity = _context.Set<TEntityBase>().Find(id);
+                var entityContext = _context.Set<TEntityBase>();
+                var entity = entityContext.Find(id);
                 if (entity == null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                _mapper.Map(updateDto, entity);
+                var updatedEntity = entityContext.ProjectTo<TEntityBase>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+
+                if (updatedEntity is null)
+                {
+                    throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} couldn't be converted");
+                }
+
+                entityContext.Update(updatedEntity);
+
                 _context.SaveChanges();
-                return _mapper.Map<TEntityDto>(entity);
+
+                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, updatedEntity).FirstOrDefault();
+
+                if (entityDto is null)
+                {
+                    throw new Exception("Error updating entity.");
+                }
+
+                return entityDto;
+            }
+            catch (KeyNotFoundException ex)
+            {
+                _logger.LogWarning(ex, ex.Message);
+                throw;
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                _logger.LogError(ex, "Concurrency error occurred.");
+                throw;
+            }
+            catch (DbUpdateException ex)
+            {
+                _logger.LogError(ex, "Error updating the database.");
+                throw;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred.");
+                throw;
+            }
+        }
+
+        public async Task<TEntityDto> UpdateAsync(TPrimaryKey id, TCreateDto updateDto)
+        {
+            try
+            {
+                var entityContext = _context.Set<TEntityBase>();
+                var entity = await entityContext.FindAsync(id);
+                if (entity == null)
+                {
+                    throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
+                }
+                var updatedEntity = entityContext.ProjectTo<TEntityBase>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+
+                if (updatedEntity is null)
+                {
+                    throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} couldn't be converted");
+                }
+
+                entityContext.Update(updatedEntity);
+
+                await _context.SaveChangesAsync();
+
+                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, updatedEntity).FirstOrDefault();
+
+                if (entityDto is null)
+                {
+                    throw new Exception("Error updating entity.");
+                }
+
+                return entityDto;
             }
             catch (KeyNotFoundException ex)
             {

@@ -9,7 +9,7 @@ namespace GladLogsApi.Configuration.EntityConfigurations
         public void Configure(EntityTypeBuilder<User> builder)
         {
             // Set primary key
-            builder.HasKey(u => u.UserId);
+            builder.HasKey(u => u.Id);
 
             // Set properties
             builder.Property(u => u.Name).IsRequired();

@@ -9,7 +9,7 @@ namespace GladLogsApi.Configuration.EntityConfigurations
         public void Configure(EntityTypeBuilder<Chat> builder)
         {
             // Set primary key
-            builder.HasKey(c => c.ChatId);
+            builder.HasKey(c => c.Id);
 
             // Set properties
             builder.Property(c => c.Name).IsRequired();

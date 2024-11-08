@@ -10,7 +10,7 @@ namespace GladLogsApi.Configuration.EntityConfigurations
         public void Configure(EntityTypeBuilder<Message> builder)
         {
             // Set primary key
-            builder.HasKey(m => m.MessageId);
+            builder.HasKey(m => m.Id);
 
             // Set properties
             builder.Property(m => m.Content).IsRequired(); // Content is required

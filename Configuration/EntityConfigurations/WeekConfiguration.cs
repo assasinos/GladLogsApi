@@ -9,7 +9,7 @@ namespace GladLogsApi.Configuration.EntityConfigurations
         public void Configure(EntityTypeBuilder<Week> builder)
         {
             // Set primary key
-            builder.HasKey(w => w.WeekId);
+            builder.HasKey(w => w.Id);
 
             // Set properties
             builder.Property(w => w.StartDate).IsRequired();
