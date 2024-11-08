@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Services\" />
+    <Folder Include="Data\Services\MessageService\" />
+    <Folder Include="Data\Services\WeekService\" />
+    <Folder Include="Data\Services\UserService\" />
   </ItemGroup>
 
 </Project>

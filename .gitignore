@@ -368,3 +368,5 @@ FodyWeavers.xsd
 
 # SqLite Db files
 *.db
+*.db-shm
+*.db-wal
