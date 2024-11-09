@@ -1,4 +1,5 @@
-﻿using GladLogsApi.Configuration.AuthConfigurations;
+﻿using GladLogsApi.Attributes;
+using GladLogsApi.Configuration.AuthConfigurations;
 using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
 using GladLogsApi.Data.Repositories.CrudRepository;
@@ -29,6 +30,8 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
 
             //Add the services
             builder.Services.AddServices();
+
+            builder.Services.AddScoped<ValidateAuthKeyAttribute>();
         }
 
 
