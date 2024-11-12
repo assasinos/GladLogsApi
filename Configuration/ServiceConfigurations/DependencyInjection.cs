@@ -4,6 +4,7 @@ using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
 using GladLogsApi.Data.Repositories.CrudRepository;
 using GladLogsApi.Data.Services.ChatService;
+using GladLogsApi.Data.Services.MessageService;
 
 namespace GladLogsApi.Configuration.ServiceConfigurations
 {
@@ -42,6 +43,7 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
         private static void AddServices(this IServiceCollection services)
         {
             services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IMessageService, MessageService>();
         }
 
 
