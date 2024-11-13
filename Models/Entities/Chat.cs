@@ -6,13 +6,8 @@ namespace GladLogsApi.Models.Entities
     /// <summary>
     /// Represents a chat or streaming session where messages are sent.
     /// </summary>
-    public class Chat : EntityBase<Guid>
+    public class Chat : EntityBase<string> // I belive that twitch usernames are unique, so I'm using them as the primary key.
     {
-
-        /// <summary>
-        /// Name or identifier for the chat.
-        /// </summary>
-        public string Name { get; set; } = null!;
 
         /// <summary>
         /// Date indicating when the chat was initially logged.

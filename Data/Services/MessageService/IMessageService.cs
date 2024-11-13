@@ -30,7 +30,7 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="WeekId">The week ID.</param>
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>A collection of message DTOs.</returns>
-        ICollection<MessageDto>? GetUserMessagesByChatAndWeek(Guid UserId, Guid WeekId, Guid ChatId);
+        ICollection<MessageDto>? GetUserMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId);
 
         /// <summary>
         /// Asynchronously gets the messages of a user by chat and week.
@@ -39,7 +39,7 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="WeekId">The week ID.</param>
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of message DTOs.</returns>
-        Task<ICollection<MessageDto>?> GetUserMessagesByChatAndWeekAsync(Guid UserId, Guid WeekId, Guid ChatId);
+        Task<ICollection<MessageDto>?> GetUserMessagesByChatAndWeekAsync(string UserId, Guid WeekId, string ChatId);
 
         /// <summary>
         /// Asynchronously gets the count of messages of a user by chat.
@@ -47,7 +47,7 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="UserId">The user ID.</param>
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the count of messages.</returns>
-        Task<int?> GetUserMessageCountByChatAsync(Guid UserId, Guid ChatId);
+        Task<int?> GetUserMessageCountByChatAsync(string UserId, string ChatId);
 
         /// <summary>
         /// Gets the count of messages of a user by chat.
@@ -55,6 +55,6 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="UserId">The user ID.</param>
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>The count of messages.</returns>
-        int? GetUserMessageCountByChat(Guid UserId, Guid ChatId);
+        int? GetUserMessageCountByChat(string UserId, string ChatId);
     }
 }

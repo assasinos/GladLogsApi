@@ -11,8 +11,6 @@ namespace GladLogsApi.Configuration.EntityConfigurations
             // Set primary key
             builder.HasKey(u => u.Id);
 
-            // Set properties
-            builder.Property(u => u.Name).IsRequired();
             builder.Property(u => u.CreatedAt).IsRequired();
 
             // Set relationships

@@ -1,4 +1,5 @@
 ﻿using GladLogsApi.Data.Services.MessageService;
+using GladLogsApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GladLogsApi.Controllers
@@ -26,7 +27,7 @@ namespace GladLogsApi.Controllers
         // This might change in the future, to take username and chatname instead of IDs.
         // GET /messages/count?UserId=00000000-0000-0000-0000-000000000000&ChatId=00000000-0000-0000-0000-000000000000
         [HttpGet("count")]
-        public IActionResult GetUserMessageCountByChat(Guid UserId, Guid ChatId)
+        public IActionResult GetUserMessageCountByChat(string UserId, string ChatId)
         {
             var count = _messageService.GetUserMessageCountByChat(UserId, ChatId);
 
@@ -52,7 +53,7 @@ namespace GladLogsApi.Controllers
         /// <returns>The messages for the user in the chat for the specified week.</returns>
         // GET /messages?UserId=00000000-0000-0000-0000-000000000000&WeekId=00000000-0000-0000-0000-000000000000&ChatId=00000000-0000-0000-0000-000000000000
         [HttpGet]
-        public IActionResult GetUserMessagesByChatAndWeek(Guid UserId, Guid WeekId, Guid ChatId)
+        public IActionResult GetUserMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId)
         {
             var messages = _messageService.GetUserMessagesByChatAndWeek(UserId, WeekId, ChatId);
 

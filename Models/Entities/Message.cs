@@ -13,12 +13,12 @@ namespace GladLogsApi.Models.Entities
         /// <summary>
         /// ID of the chat or stream where the message was sent.
         /// </summary>
-        public Guid ChatId { get; set; }
+        public string ChatId { get; set; }
 
         /// <summary>
         /// ID of the user who sent the message.
         /// </summary>
-        public Guid UserId { get; set; }
+        public string UserId { get; set; }
 
         /// <summary>
         /// Text content of the message.

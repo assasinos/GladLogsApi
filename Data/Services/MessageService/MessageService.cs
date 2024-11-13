@@ -46,7 +46,7 @@ namespace GladLogsApi.Data.Services.MessageService
             }
         }
 
-        public int? GetUserMessageCountByChat(Guid UserId, Guid ChatId)
+        public int? GetUserMessageCountByChat(string UserId, string ChatId)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace GladLogsApi.Data.Services.MessageService
             }
         }
 
-        public async Task<int?> GetUserMessageCountByChatAsync(Guid UserId, Guid ChatId)
+        public async Task<int?> GetUserMessageCountByChatAsync(string UserId, string ChatId)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace GladLogsApi.Data.Services.MessageService
             }
         }
 
-        public ICollection<MessageDto>? GetUserMessagesByChatAndWeek(Guid UserId, Guid WeekId, Guid ChatId)
+        public ICollection<MessageDto>? GetUserMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace GladLogsApi.Data.Services.MessageService
             }
         }
 
-        public async Task<ICollection<MessageDto>?> GetUserMessagesByChatAndWeekAsync(Guid UserId, Guid WeekId, Guid ChatId)
+        public async Task<ICollection<MessageDto>?> GetUserMessagesByChatAndWeekAsync(string UserId, Guid WeekId, string ChatId)
         {
             try
             {

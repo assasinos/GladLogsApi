@@ -8,9 +8,9 @@ namespace GladLogsApi.Data.Services.ChatService
     {
 
         private readonly ILogger<ChatService> _logger;
-        private readonly ICrudRepository<Guid,Chat,ChatDto,CreateChatDto> _chatRepository;
+        private readonly ICrudRepository<string,Chat,ChatDto,CreateChatDto> _chatRepository;
 
-        public ChatService(ILogger<ChatService> logger, ICrudRepository<Guid, Chat, ChatDto, CreateChatDto> chatRepository)
+        public ChatService(ILogger<ChatService> logger, ICrudRepository<string, Chat, ChatDto, CreateChatDto> chatRepository)
         {
             _logger = logger;
             _chatRepository = chatRepository;
@@ -22,7 +22,7 @@ namespace GladLogsApi.Data.Services.ChatService
             try
             {
                 _logger.LogInformation("Creating chat with name {Name}", ChatName);
-                var CreateDto = new CreateChatDto { Name = ChatName, CreatedAt = DateTime.UtcNow };
+                var CreateDto = new CreateChatDto { Id = ChatName, CreatedAt = DateTime.UtcNow };
                 var createdChat = await _chatRepository.CreateAsync(CreateDto);
                 return createdChat;
             }
@@ -33,17 +33,17 @@ namespace GladLogsApi.Data.Services.ChatService
             }
         }
 
-        public async Task<Task?> DeleteChatAsync(Guid id)
+        public async Task<Task?> DeleteChatAsync(string id)
         {
             try
             {
-                _logger.LogInformation($"Deleting chat with Id {id}");
+                _logger.LogInformation($"Deleting chat with Name: {id}");
                 await _chatRepository.DeleteAsync(id);
                 return Task.CompletedTask;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error deleting chat with Id {id}");
+                _logger.LogError(ex, $"Error deleting chat with Name: {id}");
                 return null;
 
             }

@@ -16,7 +16,7 @@ namespace GladLogsApi.Data.Services.ChatService
         /// </summary>
         /// <param name="Id">The unique identifier of the chat to delete.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains successful task, or null if the deletion failed.</returns>
-        Task<Task?> DeleteChatAsync(Guid Id);
+        Task<Task?> DeleteChatAsync(string Id);
         /// <summary>
         /// Retrieves all chats asynchronously.
         /// </summary>
