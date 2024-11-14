@@ -35,7 +35,7 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
                 var createEntity = _mapper.Map<TEntityBase>(createDto);
                 var entity =  entityContext.Add(createEntity);
                 _context.SaveChanges();
-                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+                var entityDto = _mapper.Map<TEntityDto>(entity.Entity);
                 if (entityDto is null) {
                     throw new Exception("Error creating entity.");
                 }
@@ -68,7 +68,8 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
                 var createEntity = _mapper.Map<TEntityBase>(createDto);
                 var entity = entityContext.Add(createEntity);
                 _context.SaveChanges();
-                var entityDto = await entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entity).FirstOrDefaultAsync();
+                var entityDto = _mapper.Map<TEntityDto>(entity.Entity);
+
                 return entityDto is null ? throw new Exception("Error creating entity.") : entityDto;
             }
             catch (DbUpdateConcurrencyException ex)
