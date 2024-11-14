@@ -22,7 +22,7 @@ namespace GladLogsApi.Data.Services.ChatService
             try
             {
                 _logger.LogInformation("Creating chat with name {Name}", ChatName);
-                var CreateDto = new CreateChatDto { Id = ChatName, CreatedAt = DateTime.UtcNow };
+                var CreateDto = new CreateChatDto { Id = ChatName.ToLower(), CreatedAt = DateTime.UtcNow };
                 var createdChat = await _chatRepository.CreateAsync(CreateDto);
                 return createdChat;
             }
@@ -38,7 +38,7 @@ namespace GladLogsApi.Data.Services.ChatService
             try
             {
                 _logger.LogInformation($"Deleting chat with Name: {id}");
-                await _chatRepository.DeleteAsync(id);
+                await _chatRepository.DeleteAsync(id.ToLower());
                 return Task.CompletedTask;
             }
             catch (Exception ex)

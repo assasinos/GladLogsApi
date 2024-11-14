@@ -21,6 +21,8 @@ namespace GladLogsApi.Data.Services.UserService
             {
                 _logger.LogInformation("Creating user with username {Username}", createUserDto.Id);
 
+                createUserDto.Id = createUserDto.Id.ToLower();
+
                 var user = _userCrudRepository.Create(createUserDto);
 
                 return user;
@@ -37,6 +39,7 @@ namespace GladLogsApi.Data.Services.UserService
             try
             {
                 _logger.LogInformation("Creating user with username {Username}", createUserDto.Id);
+                createUserDto.Id = createUserDto.Id.ToLower();
 
                 var user = _userCrudRepository.CreateAsync(createUserDto);
 
@@ -54,6 +57,7 @@ namespace GladLogsApi.Data.Services.UserService
             try
             {
                 _logger.LogInformation("Deleting user with id {UserId}", UserId);
+                UserId = UserId.ToLower();
 
                 _userCrudRepository.Delete(UserId);
 
@@ -85,12 +89,38 @@ namespace GladLogsApi.Data.Services.UserService
 
         public UserDto? GetUserByUsername(string username)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Getting user with username {Username}", username);
+                username = username.ToLower();
+
+                var user = _userCrudRepository.GetById(username);
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user with username {Username}", username);
+                return null;
+            }
         }
 
-        public Task<UserDto?> GetUserByUsernameAsync(string username)
+        public async Task<UserDto?> GetUserByUsernameAsync(string username)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Getting user with username {Username}", username);
+                username = username.ToLower();
+
+                var user = await _userCrudRepository.GetByIdAsync(username);
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting user with username {Username}", username);
+                return null;
+            }
         }
     }
 }
