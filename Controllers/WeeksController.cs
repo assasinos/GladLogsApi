@@ -17,10 +17,10 @@ namespace GladLogsApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetUserActiveWeeks(string UserId, string ChatId)
+        public IActionResult GetUserActiveWeeks(string UserName, string ChatName)
         {
-            var weeks = _weekService.GetUserActiveWeeksInChat(UserId, ChatId);  
-            return Ok();
+            var weeks = _weekService.GetUserActiveWeeksInChat(UserName, ChatName);  
+            return Ok(weeks);
         }
 
 

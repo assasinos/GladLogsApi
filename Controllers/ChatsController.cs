@@ -63,9 +63,9 @@ namespace GladLogsApi.Controllers
         /// <returns>A status indicating the result of the operation.</returns>
         [HttpDelete]
         [ServiceFilter(typeof(ValidateAuthKeyAttribute))]
-        public async Task<IActionResult> DeleteChatAsync(string Id)
+        public async Task<IActionResult> DeleteChatAsync(string Chatname)
         {
-            var chat = await _chatService.DeleteChatAsync(Id);
+            var chat = await _chatService.DeleteChatAsync(Chatname);
             if (chat is null)
             {
                 return BadRequest();
