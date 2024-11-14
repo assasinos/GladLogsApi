@@ -1,5 +1,5 @@
 ﻿using GladLogsApi.Attributes;
-using GladLogsApi.Configuration.AuthConfigurations;
+using GladLogsApi.Configuration.ConfigTypes;
 using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
 using GladLogsApi.Data.Repositories.CrudRepository;

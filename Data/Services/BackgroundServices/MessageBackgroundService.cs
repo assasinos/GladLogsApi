@@ -1,5 +1,5 @@
 ﻿
-using GladLogsApi.Configuration.AuthConfigurations;
+using GladLogsApi.Configuration.ConfigTypes;
 using GladLogsApi.Data.Services.ChatService;
 using GladLogsApi.Data.Services.MessageService;
 using GladLogsApi.Data.Services.UserService;

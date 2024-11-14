@@ -1,4 +1,4 @@
-﻿namespace GladLogsApi.Configuration.AuthConfigurations
+﻿namespace GladLogsApi.Configuration.ConfigTypes
 {
     public class TwitchAuthConfig
     {

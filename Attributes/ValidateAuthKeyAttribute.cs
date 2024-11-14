@@ -1,4 +1,4 @@
-﻿using GladLogsApi.Configuration.AuthConfigurations;
+﻿using GladLogsApi.Configuration.ConfigTypes;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 

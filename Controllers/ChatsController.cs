@@ -1,5 +1,5 @@
 ﻿using GladLogsApi.Attributes;
-using GladLogsApi.Configuration.AuthConfigurations;
+using GladLogsApi.Configuration.ConfigTypes;
 using GladLogsApi.Data.Services.ChatService;
 using GladLogsApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
