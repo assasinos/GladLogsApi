@@ -3,8 +3,11 @@ using GladLogsApi.Configuration.AuthConfigurations;
 using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
 using GladLogsApi.Data.Repositories.CrudRepository;
+using GladLogsApi.Data.Services.BackgroundServices;
 using GladLogsApi.Data.Services.ChatService;
 using GladLogsApi.Data.Services.MessageService;
+using GladLogsApi.Data.Services.UserService;
+using GladLogsApi.Data.Services.WeekService;
 
 namespace GladLogsApi.Configuration.ServiceConfigurations
 {
@@ -19,8 +22,6 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
             builder.Services.AddDbContext<ApplicationDbContext>();
 
 
-            //Maybe this should be moved into a static class in the Configuration folder
-            builder.Services.Configure<AuthConfig>(builder.Configuration.GetSection("AuthConfig"));
 
             //Add Automapper to make the CRUDRepository easier to maintain and use
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
@@ -33,6 +34,9 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
             builder.Services.AddServices();
 
             builder.Services.AddScoped<ValidateAuthKeyAttribute>();
+
+            builder.Services.AddBackgroundServices();
+
         }
 
 
@@ -44,8 +48,14 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
         {
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IWeekService, WeekService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
+        private static void AddBackgroundServices(this IServiceCollection services)
+        {
+            services.AddHostedService<MessageBackgroundService>();
+        }
 
 
         /// <summary>
@@ -55,7 +65,7 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
         {
             builder.Services.Configure<AuthConfig>(builder.Configuration.GetSection("AuthConfig"));
             builder.Services.Configure<DbConfig>(builder.Configuration.GetSection("DbConfig"));
-
+            builder.Services.Configure<TwitchAuthConfig>(builder.Configuration.GetSection("TwitchAuth"));
         }
 
     }
