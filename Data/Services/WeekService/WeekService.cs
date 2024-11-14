@@ -70,9 +70,38 @@ namespace GladLogsApi.Data.Services.WeekService
             }
         }
 
-        public Task<IEnumerable<WeekDto>?> GetAllWeeksAsync()
+        public async Task<IEnumerable<WeekDto>?> GetAllWeeksAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Getting all weeks");
+
+                var weeks =await _weekCrudRepository.GetAllAsync();
+
+                return weeks;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting all weeks");
+                return null;
+            }
+        }
+
+        public WeekDto? GetCurrentWeek()
+        {
+            try
+            {
+                _logger.LogInformation("Getting current week");
+
+                var week = _weekCrudRepository.GetQuery(q => q.Where(w => w.StartDate <= DateTime.Now && w.EndDate >= DateTime.Now)).FirstOrDefault();
+
+                return week;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting current week");
+                return null;
+            }
         }
 
         public ICollection<WeekDto>? GetUserActiveWeeksInChat(string UserId, string ChatId)
@@ -81,9 +110,9 @@ namespace GladLogsApi.Data.Services.WeekService
             {
                 _logger.LogInformation("Getting active weeks for user {UserId} in chat {ChatId}", UserId, ChatId);
 
-                var weekss = _weekCrudRepository.GetQuery(q => q.Where(w => w.Messages.Any(x => x.UserId == UserId && x.ChatId == ChatId)).Distinct()).ToList();
+                var weeks = _weekCrudRepository.GetQuery(q => q.Where(w => w.Messages.Any(x => x.UserId == UserId && x.ChatId == ChatId)).Distinct()).ToList();
 
-                return weekss;
+                return weeks;
             }
             catch (Exception ex)
             {
@@ -93,9 +122,21 @@ namespace GladLogsApi.Data.Services.WeekService
 
         }
 
-        public Task<ICollection<WeekDto>?> GetUserActiveWeeksInChatAsync(string UserId, string ChatId)
+        public async Task<ICollection<WeekDto>?> GetUserActiveWeeksInChatAsync(string UserId, string ChatId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Getting active weeks for user {UserId} in chat {ChatId}", UserId, ChatId);
+
+                var weeks = await _weekCrudRepository.GetQuery(q => q.Where(w => w.Messages.Any(x => x.UserId == UserId && x.ChatId == ChatId)).Distinct()).ToListAsync();
+
+                return weeks;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting active weeks for user {UserId} in chat {ChatId}", UserId, ChatId);
+                return null;
+            }
         }
     }
 }

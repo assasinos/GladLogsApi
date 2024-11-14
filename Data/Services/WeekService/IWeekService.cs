@@ -13,5 +13,7 @@ namespace GladLogsApi.Data.Services.WeekService
         IEnumerable<WeekDto>? GetAllWeeks();
         Task<IEnumerable<WeekDto>?> GetAllWeeksAsync();
 
+        WeekDto? GetCurrentWeek();
+
     }
 }
