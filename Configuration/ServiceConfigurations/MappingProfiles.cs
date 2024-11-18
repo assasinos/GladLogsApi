@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GladLogsApi.Models.Dtos;
+using GladLogsApi.Models.Dtos.Message;
 using GladLogsApi.Models.Entities;
 
 namespace GladLogsApi.Configuration.ServiceConfigurations
@@ -19,6 +20,7 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
 
             CreateMap<Message, MessageDto>().ReverseMap();
             CreateMap<Message, CreateMessageDto>().ReverseMap();
+            CreateMap<Message, ShortMessageDto>().ReverseMap();
         }
     }
 }

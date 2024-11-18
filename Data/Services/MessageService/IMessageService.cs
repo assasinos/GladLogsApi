@@ -1,5 +1,6 @@
 ﻿using GladLogsApi.Data.Repositories.CrudRepository;
 using GladLogsApi.Models.Dtos;
+using GladLogsApi.Models.Dtos.Message;
 using GladLogsApi.Models.Entities;
 
 namespace GladLogsApi.Data.Services.MessageService
@@ -31,6 +32,14 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>A collection of message DTOs.</returns>
         ICollection<MessageDto>? GetUserMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId);
+        /// <summary>
+        /// Gets the messages of a user by chat and week.
+        /// </summary>
+        /// <param name="UserId">The user ID.</param>
+        /// <param name="WeekId">The week ID.</param>
+        /// <param name="ChatId">The chat ID.</param>
+        /// <returns>A collection of short message DTOs.</returns>
+        ICollection<ShortMessageDto>? GetUserShortMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId);
 
         /// <summary>
         /// Asynchronously gets the messages of a user by chat and week.
@@ -40,6 +49,15 @@ namespace GladLogsApi.Data.Services.MessageService
         /// <param name="ChatId">The chat ID.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a collection of message DTOs.</returns>
         Task<ICollection<MessageDto>?> GetUserMessagesByChatAndWeekAsync(string UserId, Guid WeekId, string ChatId);
+
+        /// <summary>
+        /// Gets the messages of a user by chat and week.
+        /// </summary>
+        /// <param name="UserId">The user ID.</param>
+        /// <param name="WeekId">The week ID.</param>
+        /// <param name="ChatId">The chat ID.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a collection of short message DTOs.</returns>
+        Task<ICollection<ShortMessageDto>?> GetUserShortMessagesByChatAndWeekAsync(string UserId, Guid WeekId, string ChatId);
 
         /// <summary>
         /// Asynchronously gets the count of messages of a user by chat.

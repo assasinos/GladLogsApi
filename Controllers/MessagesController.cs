@@ -51,11 +51,11 @@ namespace GladLogsApi.Controllers
         /// <param name="WeekId">The ID of the week.</param>
         /// <param name="ChatId">The ID of the chat.</param>
         /// <returns>The messages for the user in the chat for the specified week.</returns>
-        // GET /messages?UserId=00000000-0000-0000-0000-000000000000&WeekId=00000000-0000-0000-0000-000000000000&ChatId=00000000-0000-0000-0000-000000000000
+        // GET /messages?UserId=username&WeekId=00000000-0000-0000-0000-000000000000&ChatId=chatname
         [HttpGet]
         public IActionResult GetUserMessagesByChatAndWeek(string UserId, Guid WeekId, string ChatId)
         {
-            var messages = _messageService.GetUserMessagesByChatAndWeek(UserId, WeekId, ChatId);
+            var messages = _messageService.GetUserShortMessagesByChatAndWeek(UserId, WeekId, ChatId);
 
             if (messages is null)
             {
