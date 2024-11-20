@@ -110,7 +110,7 @@ namespace GladLogsApi.Data.Services.MessageService
             try
             {
                 _logger.LogInformation("Getting Short Messages of {User} in Week {Week}, with Chat: {Chat}", UserId, WeekId, ChatId);
-                return _shortMessagecrudRepository.GetQuery(q => q.Where(m => m.WeekId == WeekId && m.ChatId == ChatId && m.UserId == UserId)).ToList();
+                return _shortMessagecrudRepository.GetQuery(q => q.Where(m => m.WeekId == WeekId && (m.ChatId == ChatId && m.UserId == UserId))).ToList();
             }
             catch (Exception ex)
             {
@@ -124,7 +124,7 @@ namespace GladLogsApi.Data.Services.MessageService
             try
             {
                 _logger.LogInformation("Getting Short Messages of {User} in Week {Week}, with Chat: {Chat}", UserId, WeekId, ChatId);
-                return await _shortMessagecrudRepository.GetQuery(q => q.Where(m => m.WeekId == WeekId && m.ChatId == ChatId && m.UserId == UserId)).ToListAsync();
+                return await _shortMessagecrudRepository.GetQuery(q => q.Where(m => m.WeekId == WeekId && (m.ChatId == ChatId && m.UserId == UserId))).ToListAsync();
             }
             catch (Exception ex)
             {

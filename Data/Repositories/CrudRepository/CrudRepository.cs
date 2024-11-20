@@ -163,7 +163,7 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             {
                 var entityContext = _context.Set<TEntityBase>();
                 var entities = entityContext.ToList();
-                return entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entities);
+                return _mapper.Map<IEnumerable<TEntityDto>>(entities);
             }
             catch (Exception ex)
             {
@@ -178,7 +178,7 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             {
                 var entityContext = _context.Set<TEntityBase>();
                 var entities = await entityContext.ToListAsync();
-                return entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, entities);
+                return _mapper.Map<IEnumerable<TEntityDto>>(entities);
             }
             catch (Exception ex)
             {
@@ -193,12 +193,15 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             {
                 var entityContext = _context.Set<TEntityBase>();
 
-                var entity = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider,entityContext.Find(id)).FirstOrDefault();
+                var entity = entityContext.Find(id);
+
                 if (entity is null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                return entity;
+                var entityDto = _mapper.Map<TEntityDto>(entity);
+
+                return entityDto;
             }
             catch (KeyNotFoundException ex)
             {
@@ -218,12 +221,13 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             {
                 var entityContext = _context.Set<TEntityBase>();
 
-                var entity = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, await entityContext.FindAsync(id)).FirstOrDefault();
+                var entity = await entityContext.FindAsync(id);
                 if (entity is null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                return entity;
+
+                return _mapper.Map<TEntityDto>(entity);
             }
             catch (KeyNotFoundException ex)
             {
@@ -262,18 +266,18 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                var updatedEntity = entityContext.ProjectTo<TEntityBase>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+                var CreateEntity = _mapper.Map<TEntityBase>(updateDto);
 
-                if (updatedEntity is null)
+                if (CreateEntity is null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} couldn't be converted");
                 }
 
-                entityContext.Update(updatedEntity);
+                var updatedEntity =  entityContext.Update(CreateEntity);
 
                 _context.SaveChanges();
 
-                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, updatedEntity).FirstOrDefault();
+                var entityDto = _mapper.Map<TEntityDto>(updatedEntity.Entity);
 
                 if (entityDto is null)
                 {
@@ -314,18 +318,18 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} not found.");
                 }
-                var updatedEntity = entityContext.ProjectTo<TEntityBase>(_mapper.ConfigurationProvider, entity).FirstOrDefault();
+                var CreateEntity = _mapper.Map<TEntityBase>(updateDto);
 
-                if (updatedEntity is null)
+                if (CreateEntity is null)
                 {
                     throw new KeyNotFoundException($"Entity {typeof(TEntityBase)} with id {id} couldn't be converted");
                 }
 
-                entityContext.Update(updatedEntity);
+                var updatedEntity = entityContext.Update(CreateEntity);
 
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
 
-                var entityDto = entityContext.ProjectTo<TEntityDto>(_mapper.ConfigurationProvider, updatedEntity).FirstOrDefault();
+                var entityDto = _mapper.Map<TEntityDto>(updatedEntity.Entity);
 
                 if (entityDto is null)
                 {
