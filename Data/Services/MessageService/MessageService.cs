@@ -3,6 +3,7 @@ using GladLogsApi.Models.Dtos;
 using GladLogsApi.Models.Dtos.Message;
 using GladLogsApi.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace GladLogsApi.Data.Services.MessageService
 {

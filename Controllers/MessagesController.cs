@@ -24,8 +24,7 @@ namespace GladLogsApi.Controllers
         /// <param name="UserId">The ID of the user.</param>
         /// <param name="ChatId">The ID of the chat.</param>
         /// <returns>The count of messages for the user in the chat.</returns>
-        // This might change in the future, to take username and chatname instead of IDs.
-        // GET /messages/count?UserId=00000000-0000-0000-0000-000000000000&ChatId=00000000-0000-0000-0000-000000000000
+        // GET /messages/count?UserId=username&ChatId=chatname
         [HttpGet("count")]
         public IActionResult GetUserMessageCountByChat(string UserId, string ChatId)
         {

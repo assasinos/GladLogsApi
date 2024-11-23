@@ -28,7 +28,8 @@ namespace GladLogsApi.Models.Entities
         /// <summary>
         /// Timestamp indicating when the message was sent.
         /// </summary>
-        public DateTime Timestamp { get; set; }
+        public string Timestamp { get; set; } //Timestamp is a string because it is stored as a string in the database. The string is a ISO 8601 formatted date.
+
 
         /// <summary>
         /// ID of the week during which the message was sent.

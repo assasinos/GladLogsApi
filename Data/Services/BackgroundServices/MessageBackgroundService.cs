@@ -4,6 +4,7 @@ using GladLogsApi.Data.Services.ChatService;
 using GladLogsApi.Data.Services.MessageService;
 using GladLogsApi.Data.Services.UserService;
 using GladLogsApi.Data.Services.WeekService;
+using GladLogsApi.Extensions;
 using GladLogsApi.Models.Dtos;
 using Microsoft.Extensions.Options;
 using TwitchLib.Client;
@@ -92,7 +93,7 @@ namespace GladLogsApi.Data.Services.BackgroundServices
                 {
                     ChatId = e.ChatMessage.Channel,
                     Content = e.ChatMessage.Message,
-                    Timestamp = DateTime.UtcNow,
+                    Timestamp = DateTime.UtcNow.ToIso8601String(),
                     UserId = user.Id,
                     WeekId = week.Id
                 };
