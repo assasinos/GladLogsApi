@@ -14,20 +14,23 @@ using TwitchLib.Communication.Clients;
 using TwitchLib.Communication.Interfaces;
 using TwitchLib.Communication.Models;
 
-namespace GladLogsApi.Data.Services.BackgroundServices
+namespace GladLogsApi.Data.Services.TwitchConnectionService
 {
-    public class MessageBackgroundService : BackgroundService
+    public class TwitchConnectionService : ITwitchConnectionService
     {
 
         private readonly TwitchAuthConfig _twitchAuthConfig;
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<MessageBackgroundService> _logger;
+        private readonly ILogger<TwitchConnectionService> _logger;
+
+        private CancellationTokenSource? _cts;
+        private Task? _currentTask;
 
         private static TwitchClient? client;
 
-        public MessageBackgroundService(
+        public TwitchConnectionService(
             IOptions<TwitchAuthConfig> twitchAuthConfig,
-            ILogger<MessageBackgroundService> logger, 
+            ILogger<TwitchConnectionService> logger, 
             IServiceProvider serviceProvider)
         {
             _twitchAuthConfig = twitchAuthConfig.Value;
@@ -35,10 +38,11 @@ namespace GladLogsApi.Data.Services.BackgroundServices
             _serviceProvider = serviceProvider;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        private async Task RunTask(CancellationToken stoppingToken)
         {
             try
             {
+                _logger.LogInformation("Starting message background service");
                 var options = new ClientOptions()
                 {
                     MessagesAllowedInPeriod = 10000,
@@ -72,6 +76,14 @@ namespace GladLogsApi.Data.Services.BackgroundServices
             {
                 _logger.LogError(ex, "Failed to start the message background service or something went wrong");
             }
+            finally
+            {
+                if (client is not null && client.IsConnected)
+                {
+                    client.Disconnect();
+                }
+                _logger.LogInformation("Stopping message background service");
+            }
         }
 
         private void OnMessage(object? sender, OnMessageReceivedArgs e)
@@ -80,7 +92,7 @@ namespace GladLogsApi.Data.Services.BackgroundServices
             {
                 using var scope = _serviceProvider.CreateScope();
                 var _userService = scope.ServiceProvider.GetRequiredService<IUserService>();
-                var user = GetUser(e.ChatMessage.Username, _userService);
+                var user = GetOrCreateUser(e.ChatMessage.Username, _userService);
 
                 if (user is null) return;
 
@@ -111,7 +123,7 @@ namespace GladLogsApi.Data.Services.BackgroundServices
             }
         }
 
-        private UserDto? GetUser(string username, IUserService userService)
+        private UserDto? GetOrCreateUser(string username, IUserService userService)
         {
             var user = userService.GetUserByUsername(username);
             if (user is null)
@@ -146,6 +158,43 @@ namespace GladLogsApi.Data.Services.BackgroundServices
                 }
             }
             return week;
+        }
+
+        public bool Start()
+        {
+            if (_cts is not null)
+            {
+                _logger.LogWarning("Tried to start the service before it was stopped");
+                return false;
+            }
+            _cts = new CancellationTokenSource();
+            _currentTask = Task.Run(() => RunTask(_cts.Token),_cts.Token);
+            _logger.LogInformation("Service started");
+            return true;
+        }
+
+        public bool Stop()
+        {
+            if (_cts is null)
+            {
+                _logger.LogWarning("Tried to stop the service before it was started");
+                return false;
+            }
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
+            _currentTask = null;
+            _logger.LogInformation("Service stopped");
+            return true;
+        }
+
+        public bool Restart()
+        {
+            if (!Stop())
+            {
+                return false;
+            }
+            return Start();
         }
     }
 }

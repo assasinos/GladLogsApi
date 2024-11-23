@@ -1,9 +1,10 @@
 ﻿using GladLogsApi.Attributes;
 using GladLogsApi.Configuration.ConfigTypes;
 using GladLogsApi.Data.Services.ChatService;
+using GladLogsApi.Data.Services.TwitchConnectionService;
 using GladLogsApi.Models.Dtos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+
 
 
 namespace GladLogsApi.Controllers
@@ -13,9 +14,11 @@ namespace GladLogsApi.Controllers
     public class ChatsController : ControllerBase
     {
         private readonly IChatService _chatService;
+        private readonly ITwitchConnectionService _twitchConnectionService;
 
-        public ChatsController(IChatService chatService)
+        public ChatsController(IChatService chatService, ITwitchConnectionService twitchConnectionService)
         {
+            _twitchConnectionService = twitchConnectionService;
             _chatService = chatService;
         }
 
@@ -53,6 +56,11 @@ namespace GladLogsApi.Controllers
             {
                 return StatusCode(500);
             }
+            //restart the service
+            if(!_twitchConnectionService.Restart())
+            {
+                return BadRequest("Twitch Connection Service couldn't be restarted, please try to do it mannualy");
+            }
             return Ok(chat);
         }
 
@@ -69,6 +77,11 @@ namespace GladLogsApi.Controllers
             if (chat is null)
             {
                 return BadRequest();
+            }
+            //restart the service
+            if (!_twitchConnectionService.Restart())
+            {
+                return BadRequest("Twitch Connection Service couldn't be restarted, please try to do it mannualy");
             }
             return Ok();
         }

@@ -3,11 +3,12 @@ using GladLogsApi.Configuration.ConfigTypes;
 using GladLogsApi.Configuration.DbConfigurations;
 using GladLogsApi.Data;
 using GladLogsApi.Data.Repositories.CrudRepository;
-using GladLogsApi.Data.Services.BackgroundServices;
+using GladLogsApi.Data.Services.TwitchConnectionService;
 using GladLogsApi.Data.Services.ChatService;
 using GladLogsApi.Data.Services.MessageService;
 using GladLogsApi.Data.Services.UserService;
 using GladLogsApi.Data.Services.WeekService;
+using GladLogsApi.Data.Services.LifeCycleService;
 
 namespace GladLogsApi.Configuration.ServiceConfigurations
 {
@@ -54,7 +55,8 @@ namespace GladLogsApi.Configuration.ServiceConfigurations
 
         private static void AddBackgroundServices(this IServiceCollection services)
         {
-            services.AddHostedService<MessageBackgroundService>();
+            services.AddHostedService<LifeCycleService>();
+            services.AddSingleton<ITwitchConnectionService,TwitchConnectionService>();
         }
 
 
