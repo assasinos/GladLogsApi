@@ -66,8 +66,8 @@ namespace GladLogsApi.Data.Repositories.CrudRepository
             {
                 var entityContext = _context.Set<TEntityBase>();
                 var createEntity = _mapper.Map<TEntityBase>(createDto);
-                var entity = entityContext.Add(createEntity);
-                _context.SaveChanges();
+                var entity = await entityContext.AddAsync(createEntity);
+                await _context.SaveChangesAsync();
                 var entityDto = _mapper.Map<TEntityDto>(entity.Entity);
 
                 return entityDto is null ? throw new Exception("Error creating entity.") : entityDto;
