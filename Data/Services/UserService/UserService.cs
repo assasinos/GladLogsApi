@@ -40,6 +40,7 @@ namespace GladLogsApi.Data.Services.UserService
             {
                 _logger.LogInformation("Creating user with username {Username}", createUserDto.Id);
                 createUserDto.Id = createUserDto.Id.ToLower();
+                createUserDto.CreatedAt = DateTime.UtcNow;
 
                 var user = _userCrudRepository.CreateAsync(createUserDto);
 
